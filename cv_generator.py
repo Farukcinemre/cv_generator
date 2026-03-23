@@ -13,7 +13,7 @@ class PDF(FPDF):
         # Dosya isimlerinin GitHub'daki ile birebir aynı (küçük harf) olduğundan emin ol
         f_reg = "arial.ttf"
         f_bold = "arialbd.ttf"
-        #f_ital = "ariali.ttf"
+        f_ital = "ariali.ttf"
 
         self.font_family_to_use = "helvetica" # Varsayılan (Fallback)
         
