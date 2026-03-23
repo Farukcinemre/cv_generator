@@ -7,22 +7,32 @@ from PIL import Image
 # --- PDF SINIFI GÜNCELLEME ---
 class PDF(FPDF):
     def __init__(self, theme_color=(0, 0, 0)):
-        # fpdf2 kullanıyorsak unit="mm" eklemek iyidir
         super().__init__()
         self.theme_color = theme_color
         
-        # Font yolları
+        # Dosya isimlerinin GitHub'daki ile birebir aynı (küçük harf) olduğundan emin ol
         f_reg = "arial.ttf"
         f_bold = "arialbd.ttf"
+        #f_ital = "ariali.ttf"
 
-        if os.path.exists(f_reg):
-            # ÖNEMLİ: uni=True parametresi eski fpdf sürümlerinde Unicode'u açar
-            self.add_font("ArialTR", "", f_reg, uni=True) 
-            if os.path.exists(f_bold):
-                self.add_font("ArialTR", "B", f_bold, uni=True)
-            self.font_family_to_use = "ArialTR"
-        else:
-            self.font_family_to_use = "Arial" # Helvetica yerine Arial (Unicode destekli sistemlerde)
+        self.font_family_to_use = "helvetica" # Varsayılan (Fallback)
+        
+        try:
+            if os.path.exists(f_reg):
+                self.add_font("ArialTR", "", f_reg, uni=True)
+                self.font_family_to_use = "ArialTR"
+                
+                if os.path.exists(f_bold):
+                    self.add_font("ArialTR", "B", f_bold, uni=True)
+                
+                if os.path.exists(f_ital):
+                    self.add_font("ArialTR", "I", f_ital, uni=True)
+                else:
+                    # EĞER İTALİK DOSYASI YOKSA: "I" stilini "Regular" dosyasına bağla ki çökmesin
+                    self.add_font("ArialTR", "I", f_reg, uni=True)
+        except Exception:
+            self.font_family_to_use = "helvetica"
+
 
     def draw_section_header(self, title):
         self.ln(5)
