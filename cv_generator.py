@@ -10,29 +10,22 @@ class PDF(FPDF):
         super().__init__()
         self.theme_color = theme_color
         
-        # Dosya isimlerinin GitHub'daki ile birebir aynı (küçük harf) olduğundan emin ol
+        # Font dosyaları klasörde mi kontrol et
         f_reg = "arial.ttf"
-        f_bold = "arialbd.ttf"
-        f_ital = "ariali.ttf"
-
-        self.font_family_to_use = "helvetica" # Varsayılan (Fallback)
         
-        try:
-            if os.path.exists(f_reg):
-                self.add_font("ArialTR", "", f_reg, uni=True)
-                self.font_family_to_use = "ArialTR"
-                
-                if os.path.exists(f_bold):
-                    self.add_font("ArialTR", "B", f_bold, uni=True)
-                
-                if os.path.exists(f_ital):
-                    self.add_font("ArialTR", "I", f_ital, uni=True)
-                else:
-                    # EĞER İTALİK DOSYASI YOKSA: "I" stilini "Regular" dosyasına bağla ki çökmesin
-                    self.add_font("ArialTR", "I", f_reg, uni=True)
-        except Exception:
-            self.font_family_to_use = "helvetica"
+        # Varsayılan olarak Arial (veya Helvetica) ayarla
+        self.font_family_to_use = "Arial" 
 
+        if os.path.exists(f_reg):
+            try:
+                # 'uni=True' yerine direkt dosyayı bağlayalım
+                self.add_font("ArialTR", "", f_reg, uni=True)
+                # Bold ve Italic için de aynı dosyayı kullan (Eksik dosya riskini sıfırlar)
+                self.add_font("ArialTR", "B", f_reg, uni=True)
+                self.add_font("ArialTR", "I", f_reg, uni=True)
+                self.font_family_to_use = "ArialTR"
+            except Exception:
+                self.font_family_to_use = "Arial"
 
     def draw_section_header(self, title):
         self.ln(5)
