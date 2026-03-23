@@ -4,27 +4,25 @@ import json
 import os
 from PIL import Image
 
-# --- MODERN ŞABLON PDF SINIFI ---
+# --- PDF SINIFI GÜNCELLEME ---
 class PDF(FPDF):
     def __init__(self, theme_color=(0, 0, 0)):
+        # fpdf2 kullanıyorsak unit="mm" eklemek iyidir
         super().__init__()
         self.theme_color = theme_color
-        # Font yollarını güvenli hale getirdik
+        
+        # Font yolları
         f_reg = "arial.ttf"
         f_bold = "arialbd.ttf"
-        f_ital = "ariali.ttf"
 
-        # Fontları yüklerken hata kontrolü ekledik
-        try:
-            if os.path.exists(f_reg):
-                self.add_font("ArialTR", "", f_reg)
-                if os.path.exists(f_bold): self.add_font("ArialTR", "B", f_bold)
-                if os.path.exists(f_ital): self.add_font("ArialTR", "I", f_ital)
-                self.font_family_to_use = "ArialTR"
-            else:
-                self.font_family_to_use = "helvetica"
-        except Exception:
-            self.font_family_to_use = "helvetica"
+        if os.path.exists(f_reg):
+            # ÖNEMLİ: uni=True parametresi eski fpdf sürümlerinde Unicode'u açar
+            self.add_font("ArialTR", "", f_reg, uni=True) 
+            if os.path.exists(f_bold):
+                self.add_font("ArialTR", "B", f_bold, uni=True)
+            self.font_family_to_use = "ArialTR"
+        else:
+            self.font_family_to_use = "Arial" # Helvetica yerine Arial (Unicode destekli sistemlerde)
 
     def draw_section_header(self, title):
         self.ln(5)
